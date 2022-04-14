@@ -7,124 +7,471 @@
 #include <vector>
 #include <map>
 #include <iterator>
+#include <cmath>
 
-//double parseDtoS(std::string) {
-//
-//	std::map<std::string, int> lang;
-//	lang.insert(std::pair<std::string, int>("0", 0));
-//	lang.insert(std::pair<std::string, int>("1", 1));
-//	lang.insert(std::pair<std::string, int>("2", 2));
-//	lang.insert(std::pair<std::string, int>("3", 3));
-//	lang.insert(std::pair<std::string, int>("4", 4));
-//	lang.insert(std::pair<std::string, int>("5", 5));
-//	lang.insert(std::pair<std::string, int>("6", 6));
-//	lang.insert(std::pair<std::string, int>("7", 7));
-//	lang.insert(std::pair<std::string, int>("8", 8));
-//	lang.insert(std::pair<std::string, int>("9", 9));
-//	lang.insert(std::pair<std::string, int>("e", 10));
-//	lang.insert(std::pair<std::string, int>("E", 10));
-//	lang.insert(std::pair<std::string, int>(".", 11));
-//
-//
-//}
+int stateDigitZero(char digit) {
+	if (digit == '.') {
+		return 1;
+	}
+	else if (digit >= '0' && digit <= '9') {
+		return 2;
+	}
 
-int main() {
-	int count = 0;
-	std::string number;
-	std::cout << "Please enter the input: " << std::endl;
-	std::cin >> number;
-	std::vector<char> one;
+	return 3;
+} 
 
-	//double nums;
-	//nums = parseDtoS(number);
+int stateDigitOne(char digit) {
+	if (digit >= '0' && digit <= '9') {
+		return 4;
+	}
 
-	for (int i = 0; i < number.length(); i++) {
-		switch (number[i])
-		{
-		case '0':
-			one.push_back('0');
-			count++;
+	return 3;
+}
+
+int stateDigitTwo(char digit) {
+	if (digit >= '0' && digit <= '9') {
+		return 2;
+	}
+	else if (digit == '.') {
+		return 7;
+	}
+	else if (digit == '_') {
+		return 5;
+	}
+	else if (digit == 'E' || digit == 'e') {
+		return 8;
+	}
+	else if (digit == 'F' || digit == 'f') {
+		return 9;
+	}
+	else {
+		return 3;
+	}
+}
+
+int stateDigitThree(char digit) {
+	return 3;
+}
+
+int stateDigitFour(char digit) {
+	//accept
+	if (digit == '_') {
+		return (6);
+	}
+	else if (digit == 'E' || digit == 'e') {
+		return 8;
+	}
+	else if (digit == 'F' || digit == 'f') {
+		return 9;
+	}
+	else if (digit >= '0' && digit <= '9') {
+		return 4;
+	}
+
+	return 3;
+}
+
+int stateDigitFive(char digit) {
+	if (digit == '_') {
+		return (5);
+	}
+	else if (digit >= '0' && digit <= '9') {
+		return 2;
+	}
+
+	return 3;
+}
+int stateDigitSix(char digit) {
+	if (digit == '_') {
+		return (6);
+	}
+	else if (digit >= '0' && digit <= '9') {
+		return 4;
+	}
+
+	return 3;
+}
+
+int stateDigitSeven(char digit){ 
+	//accept
+	if (digit >= '0' && digit <= '9') {
+		return 4;
+	}
+	else if (digit == 'F' || digit == 'f') {
+		return 9;
+	}
+	else if (digit == 'E' || digit == 'e') {
+		return 8;
+	}
+	return 3;
+}
+
+int stateDigitEight(char digit) {
+	if (digit >= '0' && digit <= '9') {
+		return 11;
+	}
+	else if (digit == '+' || digit == '-') {
+		return 10;
+	}
+
+	return 3;
+}
+
+int stateDigitNine(char digit) {
+
+	//accept
+	return 3;
+}
+
+int stateDigitTen(char digit) {
+	if (digit >= '0' && digit <= '9') {
+		return 11;
+	}
+	return 3;
+}
+
+int stateDigitEleven(char digit) {
+	if (digit >= '0' && digit <= '9') {
+		return 11;
+	}
+	else if (digit == '_') {
+		return 12;
+	}
+	else if (digit == 'F' || digit == 'f') {
+		return 9;
+	}
+	return 3;
+}
+
+int stateDigitTwelve(char digit) {
+	if (digit >= '0' && digit <= '9') {
+		return 11;
+	}
+	else if (digit == '_') {
+		return (12);
+	}
+
+	return 3;
+}
+
+bool mainState(std::string io) {
+	int state = 0;
+	bool decision = false;
+	for (int count = 0; count <= io.length(); count++) {
+		switch (state) {
+		case 0:
+			state = stateDigitZero(io[count]);
 			break;
-
-		case '1':
-			one.push_back('1');
-			count++;
+		case 1:
+			state = stateDigitOne(io[count]);
 			break;
-
-		case '2':
-			one.push_back('2');
-			count++;
+		case 2:
+			state = stateDigitTwo(io[count]);
 			break;
-
-		case '3':
-			one.push_back('3');
-			count++;
+		case 3:
+			return false;
 			break;
-
-		case '4':
-			one.push_back('4');
-			count++;
+		case 4:
+			decision = true;
+			state = stateDigitFour(io[count]);
 			break;
-
-		case '5':
-			one.push_back('5');
-			count++;
+		case 5:
+			state = stateDigitFive(io[count]);
 			break;
-
-		case '6':
-			one.push_back('6');
-			count++;
+		case 6:
+			state = stateDigitSix(io[count]);
 			break;
-
-		case '7':
-			one.push_back('7');
-			count++;
+		case 7:
+			decision = true;
+			state = stateDigitSeven(io[count]);
 			break;
-			
-		case '8':
-			one.push_back('8');
-			count++;
+		case 8:
+			state = stateDigitEight(io[count]);
 			break;
-
-		case '9':
-			one.push_back('9');
-			count++;
+		case 9:
+			decision = true;
+			state = stateDigitNine(io[count]);
 			break;
-
-		case '.':
-			one.push_back('.');
-			count++;
+		case 10:
+			state = stateDigitTen(io[count]);
 			break;
-
-		case 'f':
-			one.push_back('f');
-			count++;
+		case 11:
+			decision = true;
+			state = stateDigitEleven(io[count]);
 			break;
-
-		case 'F':
-			one.push_back('F');
-			count++;
+		case 12:
+			state = stateDigitTwelve(io[count]);
 			break;
-
-		case 'e':
-			one.push_back('e');
-			count++;
-			break;
-
-		case 'E':
-			one.push_back('E');
-			count++;
-			break;
-
 		default:
-
+			return false;
 			break;
 		}
 	}
+	return decision;
+}
 
-	//for (int i = 1; i < number.length(); i++) {
-	//	one.push_back(number.substr(i - 1, i));
-	//	std::cout << one[i] << std::endl;
-	//}
+double convertStringToDouble(std::string io) {
+	int befCount = 0;
+	int befECount = 0;
+	int countDecimal = 0;
+	int expSign = 1;
+
+	double exponent = 0;
+	double result = 0;
+	double decimal = 0;
+
+	for (int i = 0; i < io.length(); i++) {
+		switch (io[i]) {
+		case '0':
+			if (befCount != -1) {
+				if (befECount != -1) {
+					result = result * 10 + 0;
+				}
+				else if (befECount == -1) {
+					exponent = exponent * 10 + 0;
+				}
+			}
+			else if (befCount == -1) {
+				if (befECount != -1) {
+					decimal = decimal * 10 + 0;
+					countDecimal++;
+				}
+				else if (befECount == -1) {
+					exponent = exponent * 10 + 0;
+				}
+			}
+			break;
+		case '1':
+			if (befCount != -1) {
+				if (befECount != -1) {
+					result = result * 10 + 1;
+					std::cout << result << "`" << std::endl;
+				}
+				else if (befECount == -1) {
+					exponent = exponent * 10 + 1;
+				}
+			}
+			else if (befCount == -1) {
+				if (befECount != -1) {
+					decimal = decimal * 10 + 1;
+					countDecimal++;
+				}
+				else if (befECount == -1) {
+					exponent = exponent * 10 + 1;
+				}
+			}
+			break;
+		case '2':
+			if (befCount != -1) {
+				if (befECount != -1) {
+					result = result * 10 + 2;
+					std::cout << result << "`" << std::endl;
+				}
+				else if (befECount == -1) {
+					exponent = exponent * 10 + 2;
+				}
+			}
+			else if (befCount == -1) {
+				if (befECount != -1) {
+					decimal = decimal * 10 + 2;
+					countDecimal++;
+
+				}
+				else if (befECount == -1) {
+					exponent = exponent * 10 + 2;
+				}
+			}
+			break;
+		case '3':
+			if (befCount != -1) {
+				if (befECount != -1) {
+					result = result * 10 + 3;
+					std::cout << result << "`" << std::endl;
+				}
+				else if (befECount == -1) {
+					exponent = exponent * 10 + 3;
+				}
+			}
+			else if (befCount == -1) {
+				if (befECount != -1) {
+					decimal = decimal * 10 + 3;
+					countDecimal++;
+
+				}
+				else if (befECount == -1) {
+					exponent = exponent * 10 + 3;
+				}
+			}
+			break;
+		case '4':
+			if (befCount != -1) {
+				if (befECount != -1) {
+					result = result * 10 + 4;
+				}
+				else if (befECount == -1) {
+					exponent = exponent * 10 + 4;
+				}
+			}
+			else if (befCount == -1) {
+				if (befECount != -1) {
+					decimal = decimal * 10 + 4;
+					countDecimal++;
+
+				}
+				else if (befECount == -1) {
+					exponent = exponent * 10 + 4;
+				}
+			}
+			break;
+		case '5':
+			if (befCount != -1) {
+				if (befECount != -1) {
+					result = result * 10 + 5;
+				}
+				else if (befECount == -1) {
+					exponent = exponent * 10 + 5;
+				}
+			}
+			else if (befCount == -1) {
+				if (befECount != -1) {
+					decimal = decimal * 10 + 5;
+					countDecimal++;
+
+				}
+				else if (befECount == -1) {
+					exponent = exponent * 10 + 5;
+				}
+			}
+			break;
+		case '6':
+			if (befCount != -1) {
+				if (befECount != -1) {
+					result = result * 10 + 6;
+				}
+				else if (befECount == -1) {
+					exponent = exponent * 10 + 6;
+				}
+			}
+			else if (befCount == -1) {
+				if (befECount != -1) {
+					decimal = decimal * 10 + 6;
+					countDecimal++;
+
+				}
+				else if (befECount == -1) {
+					exponent = exponent * 10 + 6;
+				}
+			}
+			break;
+		case '7':
+			if (befCount != -1) {
+				if (befECount != -1) {
+					result = result * 10 + 7;
+				}
+				else if (befECount == -1) {
+					exponent = exponent * 10 + 7;
+				}
+			}
+			else if (befCount == -1) {
+				if (befECount != -1) {
+					decimal = decimal * 10 + 7;
+					countDecimal++;
+
+				}
+				else if (befECount == -1) {
+					exponent = exponent * 10 + 7;
+				}
+			}
+			break;
+		case '8':
+			if (befCount != -1) {
+				if (befECount != -1) {
+					result = result * 10 + 8;
+				}
+				else if (befECount == -1) {
+					exponent = exponent * 10 + 8;
+				}
+			}
+			else if (befCount == -1) {
+				if (befECount != -1) {
+					decimal = decimal * 10 + 8;
+					countDecimal++;
+
+				}
+				else if (befECount == -1) {
+					exponent = exponent * 10 + 8;
+				}
+			}
+			break;
+		case '9':
+			if (befCount != -1) {
+				if (befECount != -1) {
+					result = result * 10 + 9;
+				}
+				else if (befECount == -1) {
+					exponent = exponent * 10 + 9;
+				}
+			}
+			else if (befCount == -1) {
+				if (befECount != -1) {
+					decimal = decimal * 10 + 9;
+					countDecimal++;
+
+				}
+				else if (befECount == -1) {
+					exponent = exponent * 10 + 9;
+				}
+			}
+			break;
+		case '+':
+			break;
+		case '-':
+			expSign = -1;
+			break;
+		case '_':
+			break;
+		case 'e':
+			befECount = -1;
+			break;
+		case 'E':
+			befECount = -1;
+			break;
+		case '.':
+			befCount = -1;
+			std::cout << result << "`" << std::endl;
+			break;
+		default:
+			break;
+		}
+	}
+	std::cout << decimal << "`" << std::endl;
+
+	result = result + (decimal * std::pow(10, countDecimal * -1));
+	std::cout << "Value: " << result << "Exp" << exponent << std::endl;
+
+	result = result * pow(10, exponent * expSign);
+	return result;
+}
+
+int main() {
+	//do {
+	std::string number;
+	double value;
+	bool maybe = false;
+	do {
+		std::cout << "Please enter the input or press q to quit: " << std::endl;
+		std::cin >> number;
+		maybe = mainState(number);
+		if (maybe) {
+			std::cout << "Accepted String" << std::endl;
+			value = convertStringToDouble(number);
+			std::cout << value << std::endl;
+		}
+		else {
+			std::cout << "String not accepted by DFA" << std::endl;
+		}
+		maybe = false;
+	} while (!number._Equal("q"));
+
 
 }
