@@ -1,5 +1,7 @@
-# Project1_3110
+# Project1_3110 & Project 2
 
-Program recognizes any Java decimal floating point literals using DFA validation. 
+Program 1 recognizes any Java decimal floating point literals using DFA validation. 
 
-Upon opening, you may enter any value, and program will validate, and convert your inputted string into decimal.
+Program 2 evaluates foating point expressions whose operands and values are floating-point numbers. 
+
+Upon opening, you may enter any value and the program will evaluate your inputted string into decimal.
