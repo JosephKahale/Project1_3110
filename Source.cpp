@@ -320,7 +320,6 @@ double convertStringToDouble(std::string io) {
 			if (befCount != -1) {
 				if (befECount != -1) {
 					result = result * 10 + 1;
-					std::cout << result << "`" << std::endl;
 				}
 				else if (befECount == -1) {
 					exponent = exponent * 10 + 1;
@@ -340,7 +339,6 @@ double convertStringToDouble(std::string io) {
 			if (befCount != -1) {
 				if (befECount != -1) {
 					result = result * 10 + 2;
-					std::cout << result << "`" << std::endl;
 				}
 				else if (befECount == -1) {
 					exponent = exponent * 10 + 2;
@@ -361,7 +359,6 @@ double convertStringToDouble(std::string io) {
 			if (befCount != -1) {
 				if (befECount != -1) {
 					result = result * 10 + 3;
-					std::cout << result << "`" << std::endl;
 				}
 				else if (befECount == -1) {
 					exponent = exponent * 10 + 3;
@@ -513,17 +510,27 @@ double convertStringToDouble(std::string io) {
 			break;
 		case '.':
 			befCount = -1;
-			std::cout << result << "`" << std::endl;
 			break;
 		default:
 			break;
 		}
 	}
 	result = result + (decimal * std::pow(10, countDecimal * -1));
-	//std::cout << "Value: " << result << "Exp" << exponent << std::endl;
 
 	result = result * pow(10, exponent * expSign);
 	return result;
+}
+
+std::string removeWhiteSpace(std::string one) {
+	std::string nowhite;
+
+	for (int i = 0; i < one.size(); i++) {
+		if (one[i] != ' ') {
+			nowhite += one[i];
+		}
+	}
+
+	return nowhite;
 }
 
 std::vector<std::string> extractVerifyFloats(std::string posty) {
@@ -534,15 +541,12 @@ std::vector<std::string> extractVerifyFloats(std::string posty) {
 		for (int i = count; i < posty.size(); i++) {
 			if (precidence(posty[i]) == 3) {
 				temp += posty[i];
-				std::cout << std::endl << "1" << std::endl;
 			}
 			else if (precidence(posty[i]) == 1) {
 				if (precidence(posty[i - 2]) == 3) {
 					temp += posty[i];
-					std::cout << std::endl << "2" << std::endl;
 				}
 				else if(precidence(posty[i - 4]) != 3){
-					std::cout << std::endl << "3" << std::endl;
 					temp += posty[i];
 
 					nums.push_back(temp);
@@ -553,128 +557,100 @@ std::vector<std::string> extractVerifyFloats(std::string posty) {
 
 			}
 			else if (precidence(posty[i]) == 2) {
-				std::cout << std::endl << "4" << std::endl;
 				temp += posty[i];
 				nums.push_back(temp);
 				count = i + 1;
 				break;
 			}
 			else if (precidence(posty[i]) == 0) {
-				std::cout << std::endl << "5" << std::endl;
 				temp += posty[i];
 			}
 			else if (precidence(posty[i]) == -2) {
 				if (precidence(posty[i - 1]) != 3 && precidence(posty[i - 3]) != 3) {
-					std::cout << std::endl << "6" << std::endl;
 					temp += posty[i];
 					nums.push_back(temp);
 					count = i;
 					break;
 				}
 				else if (precidence(posty[i - 1]) == 1) {
-					std::cout << std::endl << "7" << std::endl;
-
 					count = i;
 				}
 			}
-			//else if (precidence(posty[i + 1]) == 1) {
-			//	temp += posty[i];
-			//	nums.push_back(temp);
-			//	count = i;
-			//	break;
-			//}
 			else if (precidence(posty[i]) == -1) {
-				std::cout << std::endl << "8" << std::endl;
 				temp += posty[i];
 			}
 		}
-		std::cout << std::endl << "Hello: " << temp << std::endl;
 		count++;
 	}
 	for (int i = 0; i < nums.size(); i++) {
-		if (mainState(nums[i]) == true) {
-			std::cout << nums[i] << "is accepted." << std::endl;
-		}
-		else {
-			std::cout << nums[i] << "is not." << std::endl;
-
+		nums[i] = removeWhiteSpace(nums[i]);
+			if (nums[i] == "") {
+				nums.erase(nums.begin() + i);
 		}
 	}
-
 
 	return nums;
 }
 
 double calculatePost(std::vector<std::string> one) {
-	std::vector<double> num;
+	std::stack<double> num;
 	double total = 0;
 	for (int i = 0; i < one.size(); i++) {
 		std::string temp = one[i];
-		//double testy = convertStringToDouble(temp);
-		//std::cout << "Number value: " << testy;
-		//if (mainState(temp) == true) {
-		//	std::cout << temp << "is accepted." << std::endl;
-		//}
-		//else {
-		//	std::cout << temp << "is not." << std::endl;
+		double testy = convertStringToDouble(temp);
 
-		//}
-		//std::cout << mainState(temp);
+		if (mainState(temp) == true) {
+			num.push(testy);
+		}
+		else {
+			double num1 = num.top();
+			num.pop();
+			double num2 = num.top();
+			num.pop();
 
-		//if (mainState(temp) == true) {
-		//	num.push_back(testy);
-		//}
-		//std::cout << num.front();
-		//else{
-		//	double num1 = num.top();
-		//	num.pop();
-		//	double num2 = num.top();
-		//	num.pop();
+			if (temp == "+") {
+				total = num2 + num1;
+			}
+			else if (temp == "-") {
+				total = num2 - num1;
+			}
+			else if (temp == "*") {
+				total = num2 * num1;
+			}
+			else {
+				total = num2 / num1;
+			}
 
-		//	if (temp == "+") {
-		//		total = num2 + num1;
-		//	}
-		//	else if (temp == "-") {
-		//		total = num2 - num1;
-		//	}
-		//	else if (temp == "*") {
-		//		total = num2 * num1;
-		//	}
-		//	else {
-		//		total = num2 / num1;
-		//	}
-
-		//	num.push(total);
-		//}
+			num.push(total);
+		}
 	}
-	return num.front();
+	return num.top();
 }
 
 int main() {
 	std::vector<std::string> testvec;
 
 	//do {
-	std::string number = "5.0*(12.0*(1.0-1.0)+3.0)+100.0+((9.0e+1f))-8.0e-1d";
-	//double value;
-	//bool maybe = false;
-	//do {
-	//	std::cout << "Please enter the input or press q to quit: " << std::endl;
-	//	std::cin >> number;
-	//	maybe = mainState(number);
-	//	if (maybe) {
-	//		std::cout << "Accepted String" << std::endl;
-	//		value = convertStringToDouble(number);
-	//		std::cout << value << std::endl;
-	//	}
-	//	else {
-	//		std::cout << "String not accepted by DFA" << std::endl;
-	//	}
-	//	maybe = false;
-	//} while (!number._Equal("q"));
+	std::string number;
+	double value;
+	do {
+		std::cout << "Please enter the input or press q to quit: " << std::endl;
+		std::getline(std::cin, number);
 
-	std::string result = postFixConverter(number);
-	std::cout << std::endl << result << std::endl;
-	testvec = extractVerifyFloats(result);
-	calculatePost(testvec);
+		std::cout << "You entered: " << number << std::endl;
+		if (number != "q") {
+			std::string result = postFixConverter(number);
+			testvec = extractVerifyFloats(result);
+			value = calculatePost(testvec);
 
+			std::cout << "The answer after using PDA is: " << value << std::endl;
+		}
+		else {
+			std::cout << "Thank you for using calc. Goodbye!";
+		}
+		//else {
+		//	std::cout << "String not accepted by DFA" << std::endl;
+		//}
+	} while (number != "q");
+	//5.0 * (12.0 * (1.0-1.0)+3.0)+100.0+((9.0e+1f))-8.0e-1d
 }
